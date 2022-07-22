@@ -7,7 +7,10 @@ export class NodeInterface implements INodeInterface {
     public id: string;
     public isInput: boolean;
     public parent: INode;
+    
     public option?: string;
+    public nodeType?: string | undefined;
+
 
     [k: string]: any;
 
@@ -44,10 +47,11 @@ export class NodeInterface implements INodeInterface {
         return this._value;
     }
 
-    public constructor(parent: INode, isInput: boolean) {
+    public constructor(parent: INode, isInput: boolean , nodeType: string | undefined) {
         this.parent = parent;
         this.isInput = isInput;
         this.id = "ni_" + generateId();
+        this.nodeType = nodeType;
     }
 
     public load(state: IInterfaceState) {

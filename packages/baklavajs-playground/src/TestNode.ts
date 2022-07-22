@@ -8,9 +8,9 @@ export default class TestNode extends Node {
 
     constructor() {
         super();
-        this.addInputInterface("Input", "CheckboxOption", false, { type: "boolean" });
-        this.addInputInterface("Test", "NumberOption", 5, { type: "number" });
-        this.addOutputInterface("Output", { type: "boolean" });
+        this.addInputInterface("Input", "CheckboxOption", false, { type: "boolean" },"ANY");
+        this.addInputInterface("Test", "NumberOption",  5 , { type: "number" },"ANY");
+        this.addOutputInterface("Output",{ type: "boolean" },"ANY");
         this.addOption("test", "InputOption");
         this.addOption("Select", "SelectOption", "Test1", undefined, { items: ["Test1", "Test2", "Test3"] });
         this.addOption("This is a checkbox", "CheckboxOption", true);

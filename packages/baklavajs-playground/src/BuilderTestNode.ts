@@ -1,8 +1,8 @@
 import { NodeBuilder } from "../../baklavajs-core/src";
 
 export default new NodeBuilder("BuilderTestNode", { twoColumn: true, width: 400 })
-    .addInputInterface("Input 1", "InputOption", "default1")
-    .addInputInterface("Input 2", "InputOption", "default2")
+    .addInputInterface("Input 1", "InputOption", "default1",{ type: "boolean" },"EXEC")
+    .addInputInterface("Input 2", "InputOption", "default2",{},"EXEC")
     .addOption("Separator", "InputOption", ",")
     .addOption("SidebarTest", "TriggerOption", () => ({ testtext: "this is a test" }), "SidebarOption")
     .addOutputInterface("Output")

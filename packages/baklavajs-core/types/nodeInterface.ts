@@ -10,6 +10,7 @@ export interface INodeInterface {
     isInput: boolean;
     parent: INode;
     option?: string;
+    nodeType?: string | undefined;
 
     events: {
         setConnectionCount: IBaklavaEvent<number>;

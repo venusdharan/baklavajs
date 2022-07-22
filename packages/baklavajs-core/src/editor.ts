@@ -171,6 +171,19 @@ export class Editor implements IEditor {
      * @returns Whether the connection is allowed or not.
      */
     public checkConnection(from: NodeInterface, to: NodeInterface): false | DummyConnection {
+
+        if(from.connectionCount > 0){
+            return false;
+        }
+
+        if(from.nodeType && to.nodeType){
+            if(from.nodeType !== to.nodeType){
+                return false;
+            }
+        }
+
+        console.log(from,to)
+
         if (!from || !to) {
             return false;
         } else if (from.parent === to.parent) {

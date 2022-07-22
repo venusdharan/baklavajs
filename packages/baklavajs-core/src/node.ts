@@ -122,9 +122,9 @@ export abstract class Node implements INode {
      * @param additionalProperties Additional properties of the interface that can be used by plugins
      * @returns The created interface or undefined, if the interface was not created
      */
-    protected addInputInterface(name: string, option?: string, defaultValue: any = null, additionalProperties?: Record<string, any>) {
+    protected addInputInterface(name: string , option?: string, defaultValue: any = null,additionalProperties?: Record<string, any> , nodeType?: string ) {
         if (this.events.beforeAddInterface.emit({ name, isInput: true, option, defaultValue })) { return; }
-        const intf = this.addInterface(true, name, option);
+        const intf = this.addInterface(true, name, option , nodeType);
         intf.events.setValue.addListener(this, () => this.events.update.emit({ name, interface: intf }));
         intf.value = defaultValue;
         Object.entries(additionalProperties || {}).forEach(([k, v]) => { intf[k] = v; });
@@ -138,9 +138,9 @@ export abstract class Node implements INode {
      * @param additionalProperties Additional properties of the interface that can be used by plugins
      * @returns The created interface or undefined, if the interface was not created
      */
-    protected addOutputInterface(name: string, additionalProperties?: Record<string, any>) {
+    protected addOutputInterface(name: string,  additionalProperties?: Record<string, any>,nodeType?: string ) {
         if (this.events.beforeAddInterface.emit({ name, isInput: false })) { return; }
-        const intf = this.addInterface(false, name);
+        const intf = this.addInterface(false, name ,undefined,nodeType);
         Object.entries(additionalProperties || {}).forEach(([k, v]) => { intf[k] = v; });
         this.events.addInterface.emit(intf);
         return intf;
@@ -253,8 +253,8 @@ export abstract class Node implements INode {
         this.editorInstance = editor;
     }
 
-    private addInterface(isInput: boolean, name: string, option?: string) {
-        const intf = new NodeInterface(this, isInput);
+    private addInterface(isInput: boolean, name: string, option?: string,nodeType?: string | undefined) {
+        const intf = new NodeInterface(this, isInput,nodeType);
         intf.option = option;
         this.interfaces.set(name, intf);
         return intf;

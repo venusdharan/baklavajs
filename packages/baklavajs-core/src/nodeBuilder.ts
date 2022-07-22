@@ -5,6 +5,7 @@ interface IInterfaceOptions {
     name: string;
     option?: string;
     defaultValue?: any;
+    nodeType?: string | undefined
     additionalProperties?: Record<string, any>;
 }
 
@@ -28,7 +29,8 @@ function getDefaultValue(v: any) {
 
 function generateNode(
     type: string, name: string, additionalProperties: Record<string, any>|undefined, intfs: IInterfaceOptions[],
-    options: Map<string, INodeOptionParameters>, calcFunction?: CalculationFunction
+    options: Map<string, INodeOptionParameters>, calcFunction?: CalculationFunction,
+    nodeType?: string | undefined,
 ) {
     return class extends Node {
 
@@ -40,11 +42,12 @@ function generateNode(
             if (additionalProperties) {
                 Object.assign(this, additionalProperties);
             }
+            console.log(intfs)
             for (const i of intfs) {
                 if (i.isInput) {
-                    this.addInputInterface(i.name, i.option, getDefaultValue(i.defaultValue), i.additionalProperties);
+                    this.addInputInterface(i.name, i.option, getDefaultValue(i.defaultValue), i.additionalProperties,i.nodeType);
                 } else {
-                    this.addOutputInterface(i.name, i.additionalProperties);
+                    this.addOutputInterface(i.name, i.additionalProperties,i.nodeType);
                 }
             }
             Array.from(options.entries()).forEach(([k, v]) => {
@@ -70,16 +73,17 @@ export class NodeBuilder {
     private intfs: IInterfaceOptions[] = [];
     private options: Map<string, INodeOptionParameters> = new Map();
     private calcFunction?: CalculationFunction;
-
+    private nodeType?: string | undefined
     /**
      * Create a new NodeBuilder instance
      * @param type Type of the node to create
      * @param additionalProperties Additional properties that can be used by plugins
      */
-    public constructor(type: string, additionalProperties?: Record<string, any>) {
+    public constructor(type: string, additionalProperties?: Record<string, any>,nodeType?: string | undefined) {
         this.type = type;
         this.name = type;
         this.additionalProperties = additionalProperties;
+        this.nodeType = nodeType;
     }
 
     /**
@@ -114,9 +118,10 @@ export class NodeBuilder {
      * @returns Current node builder instance for chaining
      */
     public addInputInterface(name: string, option?: string, defaultValue: any = null,
-                             additionalProperties?: Record<string, any>): NodeBuilder {
+                             additionalProperties?: Record<string, any>,nodeType?: string | undefined): NodeBuilder {
+                               
         this.checkDefaultValue(defaultValue);
-        this.intfs.push({ isInput: true, name, option, defaultValue, additionalProperties });
+        this.intfs.push({ isInput: true, name, option, defaultValue, additionalProperties,nodeType });
         return this;
     }
 
@@ -126,8 +131,8 @@ export class NodeBuilder {
      * @param additionalProperties Additional properties of the interface that can be used by plugins
      * @returns Current node builder instance for chaining
      */
-    public addOutputInterface(name: string, additionalProperties?: Record<string, any>): NodeBuilder {
-        this.intfs.push({ isInput: false, name, additionalProperties });
+    public addOutputInterface(name: string, additionalProperties?: Record<string, any>,nodeType?: string | undefined): NodeBuilder {
+        this.intfs.push({ isInput: false, name, additionalProperties, });
         return this;
     }
 

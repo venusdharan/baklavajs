@@ -10,6 +10,7 @@ export class Connection implements ITransferConnection {
     public to: NodeInterface;
     public isInDanger = false;
     public destructed = false;
+    public nodeType?: string | undefined;
 
     public events = {
         destruct: new BaklavaEvent<void>()
